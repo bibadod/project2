@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Login - Liquid Glass</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            /* Жидкий градиентный фон, совпадающий с файловым менеджером */
+            background: linear-gradient(135deg, #1f1c2c 0%, #928dab 50%, #4a00e0 100%);
+            background-size: 400% 400%;
+            animation: liquidBg 15s ease infinite;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        @keyframes liquidBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .window {
+            width: 430px;
+            background: rgba(30, 30, 40, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            overflow: hidden;
+        }
+
+        .titlebar {
+            height: 48px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .window-buttons {
+            margin-left: auto;
+            display: flex;
+            height: 48px;
+            margin-right: -15px;
+        }
+
+        .window-button {
+            width: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: default;
+            transition: background 0.2s;
+            color: white;
+        }
+
+        .window-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .window-button.close:hover {
+            background: rgba(220, 53, 69, 0.8);
+        }
+
+        .content {
+            padding: 38px 42px 42px;
+        }
+
+        .logo {
+            width: 54px;
+            height: 54px;
+            background: rgba(0, 122, 255, 0.4);
+            border: 1px solid rgba(0, 122, 255, 0.6);
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            margin-bottom: 22px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 25px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 7px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 0 12px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 18px;
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        input:focus {
+            border-color: rgba(0, 122, 255, 0.8);
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 122, 255, 0.3);
+        }
+
+        .error {
+            background: rgba(220, 53, 69, 0.25);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff9999;
+            padding: 10px 12px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+        }
+
+        button {
+            height: 38px;
+            min-width: 100px;
+            border: 1px solid rgba(0, 122, 255, 0.8);
+            background: rgba(0, 122, 255, 0.6);
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            transition: all 0.25s ease;
+        }
+
+        button:hover {
+            background: rgba(0, 122, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
+        }
+
+        .bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+            padding-top: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .window {
+                width: calc(100% - 30px);
+            }
+
+            .content {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="window">
+
+        <div class="titlebar">
+            <span>File Explorer</span>
+            <div class="window-buttons">
+                <div class="window-button">−</div>
+                <div class="window-button">□</div>
+                <div class="window-button close">×</div>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <div class="logo">📁</div>
+
+            <h1>Sign in</h1>
+
+            <div class="subtitle">Sign in to access your files</div>
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+
+                <label for="username">Username</label>
+                <input
+                    id="username"
+                    type="text"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <div class="button-row">
+                    <button type="submit">Sign in</button>
+                </div>
+
+            </form>
+
+            <div class="bottom">
+                Your files are stored securely in your account.
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

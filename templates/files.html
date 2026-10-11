@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Explorer - Apple Liquid Glass</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "-apple-system", "SF Pro Display", "Segoe UI", Arial, sans-serif;
+            /* Глубокий многослойный жидкий градиент в стиле Apple */
+            background: radial-gradient(circle at 10% 20%, #1a1c29 0%, #0d0e15 90%),
+                        linear-gradient(135deg, #2b1055 0%, #7597de 50%, #1f1c2c 100%);
+            background-size: 300% 300%;
+            animation: appleLiquidBg 20s ease infinite;
+            color: #f5f5f7;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        @keyframes appleLiquidBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Главное окно: Максимальный эффект стекла Apple с анимацией появления */
+        .window {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: rgba(30, 30, 40, 0.45);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow:
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(0, 0, 0, 0.3);
+
+            opacity: 0;
+            transform: scale(0.97) translateY(10px);
+            animation: appleWindowAppear 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes appleWindowAppear {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* TOP BAR */
+        .top {
+            height: 52px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        .left-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-badge {
+            width: 34px;
+            height: 34px;
+            background: rgba(0, 113, 227, 0.5);
+            border: 1px solid rgba(0, 125, 250, 0.7);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            backdrop-filter: blur(20px);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+                        0 4px 12px rgba(0, 113, 227, 0.4);
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .window-buttons {
+            margin-left: auto;
+            display: flex;
+            height: 100%;
+        }
+
+        .window-button {
+            width: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            transition: background 0.2s;
+            cursor: default;
+        }
+
+        .window-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .window-button.close:hover {
+            background: rgba(220, 53, 69, 0.8);
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            height: 54px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 10px;
+        }
+
+        .tool, .menu-btn, .address, .search, .nav-button {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border-radius: 9px;
+            color: #ffffff;
+            font-family: inherit;
+        }
+
+        .tool {
+            height: 36px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .tool:hover, .menu-btn:hover, .nav-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+                        0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .tool.blue {
+            background: rgba(0, 113, 227, 0.6);
+            border-color: rgba(0, 125, 250, 0.8);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+                        0 4px 15px rgba(0, 113, 227, 0.4);
+        }
+
+        .tool.blue:hover {
+            background: rgba(0, 113, 227, 0.85);
+        }
+
+        .hint-text {
+            margin-left: auto;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+        }
+
+        /* ADDRESS BAR */
+        .address-row {
+            height: 48px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        .nav-button {
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .address {
+            height: 34px;
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 13px;
+        }
+
+        .search {
+            width: 270px;
+            height: 34px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0 12px;
+            outline: none;
+            color: white;
+        }
+
+        .search::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search:focus {
+            border-color: rgba(0, 113, 227, 0.8);
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 113, 227, 0.3);
+        }
+
+        /* MAIN LAYOUT */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow: auto;
+            padding: 20px 24px;
+        }
+
+        /* ВЫДВИЖНОЕ МЕНЮ СЛЕВА (Apple Style) */
+        .left-panel {
+            width: 260px;
+            background: rgba(25, 25, 35, 0.6);
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: absolute;
+            left: -260px;
+            top: 0;
+            bottom: 0;
+            transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 50;
+            box-shadow: 15px 0 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .left-trigger {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            z-index: 49;
+        }
+
+        .left-trigger:hover + .left-panel,
+        .left-panel:hover {
+            left: 0;
+        }
+
+        .menu-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .menu-btn {
+            height: 42px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 9px;
+            transition: all 0.25s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateX(4px);
+        }
+
+        .menu-btn.danger {
+            background: rgba(220, 53, 69, 0.25);
+            border-color: rgba(220, 53, 69, 0.4);
+            color: #ff9999;
+            margin-top: auto;
+        }
+
+        .menu-btn.danger:hover {
+            background: rgba(220, 53, 69, 0.6);
+            border-color: rgba(220, 53, 69, 0.7);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        /* CONTENT */
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .user {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 18px 0 12px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ITEMS (Apple Glass Cards) */
+        .items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+        }
+
+        .item {
+            min-height: 125px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+                        0 12px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .icon {
+            font-size: 44px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .folder-icon {
+            color: #ffd043;
+        }
+
+        .file-icon {
+            color: #72aeff;
+        }
+
+        .item-name {
+            width: 100%;
+            text-align: center;
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .item-actions {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            display: none;
+        }
+
+        .item:hover .item-actions {
+            display: block;
+        }
+
+        .delete {
+            border: none;
+            background: rgba(255, 0, 0, 0.3);
+            cursor: pointer;
+            color: #ff8888;
+            font-size: 14px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .delete:hover {
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+        }
+
+        .empty {
+            padding: 70px 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-box {
+            width: 400px;
+            background: rgba(40, 40, 50, 0.65);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6),
+                        inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            height: 48px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 0 12px;
+            font-family: inherit;
+            color: white;
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: rgba(0, 113, 227, 0.8);
+            box-shadow: 0 0 10px rgba(0, 113, 227, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            height: 36px;
+            min-width: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-button.primary {
+            background: rgba(0, 113, 227, 0.7);
+            border-color: rgba(0, 125, 250, 0.9);
+        }
+
+        .modal-button.primary:hover {
+            background: rgba(0, 113, 227, 0.95);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="window">
+
+    <!-- TOP BAR -->
+    <div class="top">
+        <div class="left-controls">
+            <div class="logo-badge">💎</div>
+            <div class="title">File Explorer</div>
+        </div>
+        <div class="window-buttons">
+            <div class="window-button">−</div>
+            <div class="window-button">□</div>
+            <div class="window-button close">×</div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <label class="tool blue" for="file">↑ Upload</label>
+        <form action="/upload" method="POST" enctype="multipart/form-data" style="display: none;">
+            <input type="hidden" name="folder_id" value="{{ folder_id or '' }}">
+            <input type="file" id="file" name="file" onchange="this.form.submit()">
+        </form>
+
+        <button class="tool" onclick="openFolderModal()">+ New folder</button>
+
+        <span class="hint-text">← Move mouse to left edge for Menu</span>
+    </div>
+
+    <!-- ADDRESS BAR -->
+    <div class="address-row">
+        <button class="nav-button" onclick="history.back()">←</button>
+        <button class="nav-button" onclick="history.forward()">→</button>
+        <button class="nav-button" onclick="location.reload()">↻</button>
+
+        <div class="address">
+            📁 &nbsp;
+            {% if current_folder %}
+                My Files &nbsp;›&nbsp; {{ current_folder.name }}
+            {% else %}
+                My Files
+            {% endif %}
+        </div>
+
+        <input class="search" id="search" type="text" placeholder="Search files" oninput="searchFiles()">
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+
+        <!-- Левая зона активации меню -->
+        <div class="left-trigger"></div>
+
+        <!-- Выдвижная панель слева -->
+        <div class="left-panel">
+            <div class="menu-title">Navigation</div>
+
+            <a href="/files" class="menu-btn">
+                <span>↶</span> Back to root
+            </a>
+
+            <button class="menu-btn" onclick="location.reload()">
+                <span>⟳</span> Refresh page
+            </button>
+
+            <a href="/logout" class="menu-btn danger">
+                <span>🚪</span> Sign out
+            </a>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <main class="content-area">
+            <div class="content-header">
+                <div class="content-title">
+                    {% if current_folder %}
+                        {{ current_folder.name }}
+                    {% else %}
+                        Home
+                    {% endif %}
+                </div>
+                <div class="user">{{ username }}</div>
+            </div>
+
+            <!-- FOLDERS -->
+            {% if folders %}
+                <div class="section-title">Folders</div>
+                <div class="items">
+                    {% for folder in folders %}
+                        <div class="item folder-item" onclick="location.href='/files?folder_id={{ folder.id }}'" data-name="{{ folder.name|lower }}">
+                            <div class="icon folder-icon">📁</div>
+                            <div class="item-name">{{ folder.name }}</div>
+                            <div class="item-actions">
+                                <form action="/folder/delete/{{ folder.id }}" method="POST" onsubmit="event.stopPropagation(); return confirm('Delete this folder?');">
+                                    <button class="delete" type="submit" onclick="event.stopPropagation();">×</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- FILES -->
+            {% if files %}
+                <div class="section-title">Files</div>
+                <div class="items">
+                    {% for file in files %}
+                        <div class="item file-item" onclick="location.href='/download/{{ file.id }}'" data-name="{{ file.filename|lower }}">
+                            <div class="icon file-icon">📄</div>
+                            <div class="item-name">{{ file.filename }}</div>
+                            <div class="item-actions">
+                                <form action="/delete/{{ file.id }}" method="POST" onsubmit="event.stopPropagation(); return confirm('Delete this file?');">
+                                    <button class="delete" type="submit" onclick="event.stopPropagation();">×</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if not folders and not files %}
+                <div class="empty">This folder is empty.</div>
+            {% endif %}
+        </main>
+    </div>
+
+</div>
+
+<!-- NEW FOLDER MODAL -->
+<div class="modal" id="folderModal">
+    <div class="modal-box">
+        <div class="modal-header">New folder</div>
+        <div class="modal-body">
+            <form action="/folder/create" method="POST" id="folderForm">
+                <input type="hidden" name="parent_id" value="{{ folder_id or '' }}">
+                <input class="modal-input" type="text" name="name" placeholder="Folder name" autocomplete="off" required>
+                <div class="modal-buttons">
+                    <button type="button" class="modal-button" onclick="closeFolderModal()">Cancel</button>
+                    <button type="submit" class="modal-button primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openFolderModal() {
+        document.getElementById("folderModal").style.display = "flex";
+        setTimeout(function () {
+            document.querySelector(".modal-input").focus();
+        }, 50);
+    }
+
+    function closeFolderModal() {
+        document.getElementById("folderModal").style.display = "none";
+    }
+
+    document.getElementById("folderModal").addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeFolderModal();
+        }
+    });
+
+    function searchFiles() {
+        const search = document.getElementById("search").value.toLowerCase();
+        const items = document.querySelectorAll(".item");
+
+        items.forEach(function(item) {
+            const name = item.getAttribute("data-name");
+            if (!name) return;
+
+            if (name.includes(search)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
