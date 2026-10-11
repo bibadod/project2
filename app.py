@@ -145,6 +145,43 @@ def login():
     return render_template("login.html")
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if not username or not password:
+            return render_template(
+                "register.html",
+                error="Please fill in all fields"
+            )
+
+        existing_user = Users.query.filter_by(
+            username=username
+        ).first()
+
+        if existing_user:
+            return render_template(
+                "register.html",
+                error="Username already exists"
+            )
+
+        new_user = Users(
+            username=username,
+            password_hash=password
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect("/login")
+
+    return render_template("register.html")
+
+
 @app.route("/files")
 def files():
 
