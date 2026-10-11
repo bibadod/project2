@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, send_file
 from flask_sqlalchemy import SQLAlchemy
 import os
-from io import BytesI
+from io import BytesIO
 
 app = Flask(__name__)
 
