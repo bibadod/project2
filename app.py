@@ -7,13 +7,14 @@ app = Flask(__name__)
 
 app.secret_key = "my_secret_key"
 
-# Подключение базы данных: PostgreSQL для Render или SQLite для локального запуска
+# Подключение базы данных: PostgreSQL (+psycopg2) для Render или SQLite для локального запуска
 db_url = os.environ.get("DATABASE_URL")
 
 if db_url:
-    # Render может передавать URL как postgres://, но SQLAlchemy требует postgresql://
     if db_url.startswith("postgres://"):
-        db_url = db_url.replace("postgres://", "postgresql://", 1)
+        db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 else:
     db_path = os.path.join(app.root_path, "project.db")
