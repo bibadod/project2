@@ -4,227 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - Apple Liquid Glass</title>
+    <title>Sign in - Apple Liquid Glass</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
         body {
-            margin: 0;
-            height: 100vh;
+            margin: 0; height: 100vh;
             font-family: "-apple-system", "SF Pro Display", "Segoe UI", Arial, sans-serif;
             background: radial-gradient(circle at 10% 20%, #1a1c29 0%, #0d0e15 90%),
                         linear-gradient(135deg, #2b1055 0%, #7597de 50%, #1f1c2c 100%);
             background-size: 300% 300%;
             animation: appleLiquidBg 20s ease infinite;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            color: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-
         @keyframes appleLiquidBg {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         .window {
-            width: 430px;
-            background: rgba(30, 30, 40, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            box-shadow: 
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
-                0 30px 60px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            width: 430px; background: rgba(30, 30, 40, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25), 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(40px) saturate(180%); -webkit-backdrop-filter: blur(40px) saturate(180%);
             overflow: hidden;
-            opacity: 0;
-            transform: scale(0.97) translateY(10px);
-            animation: appleWindowAppear 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
-        @keyframes appleWindowAppear {
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
         .titlebar {
-            height: 48px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.03);
+            height: 48px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; align-items: center; padding: 0 16px; font-size: 14px; font-weight: 600;
+            color: rgba(255, 255, 255, 0.9); background: rgba(255, 255, 255, 0.03);
         }
-
-        .window-buttons {
-            margin-left: auto;
-            display: flex;
-            height: 48px;
-            margin-right: -16px;
-        }
-
-        .window-button {
-            width: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: default;
-            color: white;
-            transition: background 0.2s;
-        }
-
-        .window-button:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .window-button.close:hover {
-            background: rgba(220, 53, 69, 0.8);
-        }
-
-        .content {
-            padding: 38px 42px 42px;
-        }
-
+        .window-buttons { margin-left: auto; display: flex; height: 48px; margin-right: -16px; }
+        .window-button { width: 46px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; }
+        .window-button.close:hover { background: rgba(220, 53, 69, 0.8); }
+        .content { padding: 38px 42px 42px; }
         .logo {
-            width: 54px;
-            height: 54px;
-            background: rgba(0, 113, 227, 0.5);
-            border: 1px solid rgba(0, 125, 250, 0.7);
-            border-radius: 12px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 27px;
-            margin-bottom: 22px;
-            backdrop-filter: blur(20px);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
-                        0 4px 15px rgba(0, 113, 227, 0.4);
+            width: 54px; height: 54px; background: rgba(0, 113, 227, 0.5); border: 1px solid rgba(0, 125, 250, 0.7);
+            border-radius: 12px; color: white; display: flex; align-items: center; justify-content: center; font-size: 27px; margin-bottom: 22px;
+            backdrop-filter: blur(20px); box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4), 0 4px 15px rgba(0, 113, 227, 0.4);
         }
-
-        h1 {
-            margin: 0 0 8px;
-            font-size: 25px;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-            margin-bottom: 28px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 7px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
+        h1 { margin: 0 0 8px; font-size: 25px; font-weight: 600; }
+        .subtitle { color: rgba(255, 255, 255, 0.6); font-size: 13px; margin-bottom: 28px; }
+        label { display: block; font-size: 13px; margin-bottom: 7px; color: rgba(255, 255, 255, 0.9); }
         input {
-            width: 100%;
-            height: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 10px;
-            padding: 0 12px;
-            font-family: inherit;
-            font-size: 14px;
-            outline: none;
-            margin-bottom: 18px;
-            color: white;
-            backdrop-filter: blur(10px);
-            transition: all 0.2s ease;
+            width: 100%; height: 40px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px; padding: 0 12px; font-family: inherit; font-size: 14px; outline: none; margin-bottom: 18px; color: white;
         }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        input:focus {
-            border-color: rgba(0, 113, 227, 0.8);
-            background: rgba(0, 0, 0, 0.35);
-            box-shadow: 0 0 10px rgba(0, 113, 227, 0.3);
-        }
-
+        input:focus { border-color: rgba(0, 113, 227, 0.8); background: rgba(0, 0, 0, 0.35); }
         .error {
-            background: rgba(220, 53, 69, 0.25);
-            border: 1px solid rgba(220, 53, 69, 0.5);
-            color: #ff9999;
-            padding: 10px 12px;
-            font-size: 13px;
-            margin-bottom: 18px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
+            background: rgba(220, 53, 69, 0.25); border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff9999; padding: 10px 12px; font-size: 13px; margin-bottom: 18px; border-radius: 10px;
         }
-
-        .button-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .link {
-            color: #72aeff;
-            font-size: 13px;
-            text-decoration: none;
-        }
-
-        .link:hover {
-            text-decoration: underline;
-        }
-
+        .button-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+        .link { color: #72aeff; font-size: 13px; text-decoration: none; }
+        .link:hover { text-decoration: underline; }
         button {
-            height: 38px;
-            min-width: 110px;
-            border: 1px solid rgba(0, 125, 250, 0.9);
-            background: rgba(0, 113, 227, 0.7);
-            color: white;
-            font-family: inherit;
-            font-size: 13px;
-            cursor: pointer;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            transition: all 0.25s ease;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
-                        0 4px 15px rgba(0, 113, 227, 0.4);
+            height: 38px; min-width: 100px; border: 1px solid rgba(0, 125, 250, 0.9); background: rgba(0, 113, 227, 0.7);
+            color: white; font-family: inherit; font-size: 13px; cursor: pointer; border-radius: 10px;
         }
-
-        button:hover {
-            background: rgba(0, 113, 227, 0.95);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
-                        0 6px 20px rgba(0, 113, 227, 0.6);
-        }
-
-        .bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            margin-top: 30px;
-            padding-top: 18px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-        }
+        button:hover { background: rgba(0, 113, 227, 0.95); }
+        .bottom { border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 30px; padding-top: 18px; color: rgba(255, 255, 255, 0.4); font-size: 12px; }
     </style>
 </head>
-
 <body>
-
     <div class="window">
-
         <div class="titlebar">
             <span>File Explorer</span>
             <div class="window-buttons">
@@ -233,56 +76,25 @@
                 <div class="window-button close">×</div>
             </div>
         </div>
-
         <div class="content">
-
-            <div class="logo">👤</div>
-
-            <h1>Register</h1>
-
-            <div class="subtitle">Create a new account to store files</div>
-
+            <div class="logo">📁</div>
+            <h1>Sign in</h1>
+            <div class="subtitle">Sign in to access your files</div>
             {% if error %}
                 <div class="error">{{ error }}</div>
             {% endif %}
-
             <form method="POST">
-
                 <label for="username">Username</label>
-                <input
-                    id="username"
-                    type="text"
-                    name="username"
-                    placeholder="Choose a username"
-                    autocomplete="username"
-                    required
-                >
-
+                <input id="username" type="text" name="username" placeholder="Enter your username" required>
                 <label for="password">Password</label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    placeholder="Choose a password"
-                    autocomplete="new-password"
-                    required
-                >
-
+                <input id="password" type="password" name="password" placeholder="Enter your password" required>
                 <div class="button-row">
-                    <a href="/login" class="link">Already have an account?</a>
-                    <button type="submit">Sign up</button>
+                    <a href="/register" class="link">Create account</a>
+                    <button type="submit">Sign in</button>
                 </div>
-
             </form>
-
-            <div class="bottom">
-                Your files are secured and isolated per account.
-            </div>
-
+            <div class="bottom">Your files are stored securely in your account.</div>
         </div>
-
     </div>
-
 </body>
-
 </html>
